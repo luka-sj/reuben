@@ -1,0 +1,20 @@
+default: &default
+  host: <%= Env.fetch('MYSQL_HOST') %>
+  username: <%= Env.fetch('MYSQL_USERNAME') %>
+  password: <%= Env.fetch('MYSQL_PASSWORD') %>
+
+discord_bot:
+  <<: *default
+  database: discord_bot
+
+main:
+  <<: *default
+  database: main
+
+pack:
+  <<: *default
+  database: pack
+
+logs:
+  <<: *default
+  database: logs

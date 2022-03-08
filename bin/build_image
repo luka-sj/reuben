@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+require 'docker'
+require 'dotenv'
+# still a WIP
+
+puts 'Loading configuration ...'
+Dotenv.load
+
+puts 'Authenticating Docker gem ...'
+Docker.authenticate!(
+  username: ENV['DOCKER_USERNAME'],
+  password: ENV['DOCKER_PASSWORD'],
+  serveraddress: ENV['DOCKER_HOST']
+)
+
+puts 'Reading Dockerfile ...'
+read_file = File.read("#{Dir.pwd}/Dockerfile").interpolate(
+  'RUBY_VERSION' => File.read("#{Dir.pwd}/.ruby_version").chomp.strip,
+  'APP_HOME' => '/reuben'
+)
+
+puts 'Building image ...'
+image = Docker::Image.build(read_file)
+image.tag(repo: 'reuben', tag: 'image')
+
+puts 'Pushing built image ...'
+image.push

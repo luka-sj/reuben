@@ -1,0 +1,31 @@
+module Database
+  module <%= database %>
+    module <%= model %>
+      class << self
+        include Database::Schema::BaseModel
+
+        private
+
+        def parent_relations
+          JSON.parse('<%= parent_relations.to_json %>')
+        end
+
+        def child_relations
+          JSON.parse('<%= child_relations.to_json %>')
+        end
+
+        def db_name
+          '<%= db %>'
+        end
+
+        def table_name
+          '<%= table %>'
+        end
+
+        def name
+          '<%= model %>'
+        end
+      end
+    end
+  end
+end

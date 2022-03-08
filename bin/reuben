@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+ENV['APPLICATION_MODULE'] = 'reuben'
+
+require "#{Dir.pwd}/core/main.rb"

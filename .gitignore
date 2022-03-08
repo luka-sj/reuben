@@ -1,0 +1,41 @@
+# Ignore system files:
+*.gem
+*.rbc
+.SynologyWorkingDirectory
+.DS_Store
+nul
+*desktop.ini
+
+# Ignore specific directories:
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+/app/commands/private/
+/app/scripts/
+/lib/tasks/private/
+
+# Ignore environment config:
+.env
+/**/*.env
+/config/private.rb
+
+# Ignore Byebug command history file:
+.byebug_history
+
+# Documentation cache and generated files:
+/.yardoc/
+/_yardoc/
+/doc/
+/rdoc/
+
+# Ignore logs:
+/logs/
+
+# Ignore gems directory:
+/gems/

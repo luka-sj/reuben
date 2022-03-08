@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+require "#{Dir.pwd}/core/extensions/main/env.rb"
+require "#{Dir.pwd}/core/extensions/main/logger.rb"
+require "#{Dir.pwd}/core/extensions/main/gemfile.rb"
+require "#{Dir.pwd}/config/gems.rb"
+
+class Core::Gemfile
+  gem 'docker-api'
+  gem 'rubocop'
+
+  install
+end
