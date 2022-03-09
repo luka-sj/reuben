@@ -12,6 +12,7 @@ class AnnounceCommand < Discord::Commands::BaseCommand
 
   structure do |cmd|
     cmd.string('message', 'Message to broadcast to server')
+    cmd.string('channel', 'Channel to broadcast to')
   end
 
   register
@@ -25,8 +26,14 @@ class AnnounceCommand < Discord::Commands::BaseCommand
   #  command action to run when triggered
   #-----------------------------------------------------------------------------
   def action
-    bot.send_message(channel_id('BULLETIN'), option(:message), false, render_embed)
+    bot.send_message(broadcast_channel, option(:message), false, render_embed)
     event.respond(content: "I'll let everyone know :slight_smile:", ephemeral: true)
+  end
+  #-----------------------------------------------------------------------------
+  #  get channel for broadcasting
+  #-----------------------------------------------------------------------------
+  def broadcast_channel
+    option(:channel) ? option(:channel) : channel_id('BULLETIN')
   end
   #-----------------------------------------------------------------------------
   #  return embed if applicable

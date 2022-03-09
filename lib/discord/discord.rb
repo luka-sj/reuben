@@ -18,8 +18,6 @@ module Discord
     #---------------------------------------------------------------------------
     def route
       Discord::Commands::Registry.route
-    rescue
-      Env.error('Failed to bind bot actions!')
     end
     #---------------------------------------------------------------------------
     #  start discord bot

@@ -55,6 +55,8 @@ module Discord
               command.new(event).run
             end
           end
+        rescue
+          Env.error('Failed to bind slash commands!')
         end
         #-----------------------------------------------------------------------
         #  register generic action
@@ -67,6 +69,8 @@ module Discord
               command.new(event).run
             end
           end
+        rescue
+          Env.error("Failed to bind bot action: #{action}!")
         end
         #-----------------------------------------------------------------------
       end

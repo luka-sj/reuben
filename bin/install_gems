@@ -3,6 +3,7 @@ require "#{Dir.pwd}/core/extensions/main/env.rb"
 require "#{Dir.pwd}/core/extensions/main/logger.rb"
 require "#{Dir.pwd}/core/extensions/main/gemfile.rb"
 require "#{Dir.pwd}/config/gems.rb"
+require "#{Dir.pwd}/config/private.rb" if File.exist?("#{Dir.pwd}/config/private.rb")
 
 class Core::Gemfile
   gem 'docker-api'
