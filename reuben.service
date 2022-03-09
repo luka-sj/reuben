@@ -1,0 +1,17 @@
+[Unit]
+Description=reuben
+Documentation=https://github.com/luka-sj/reuben
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/usr/src/blinkit
+ExecStart=/usr/bin/ruby ./bin/reuben
+Restart=on-failure
+RestartSec=15s
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=discord-reuben
+
+[Install]
+WantedBy=multi-user.target

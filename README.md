@@ -31,8 +31,8 @@ The `Database` interface creates new namespaces and models for all tables in you
    MYSQL_HOST=
    MYSQL_USERNAME=
    MYSQL_PASSWORD=
-   DISCORD_TOKEN=
-   DEPLOYEMENT=
+   BOT_TOKEN=
+   RELEASE=
 ```
 3. Start the application using `bin/reuben`
 
