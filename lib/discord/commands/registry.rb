@@ -13,6 +13,12 @@ module Discord
           @commands ||= {}
         end
         #-----------------------------------------------------------------------
+        #  collection of all defined event types
+        #-----------------------------------------------------------------------
+        def event_types
+          @event_types ||= []
+        end
+        #-----------------------------------------------------------------------
         #  register command as part of the main registry
         #-----------------------------------------------------------------------
         def register(command, event)
@@ -30,12 +36,9 @@ module Discord
         #-----------------------------------------------------------------------
         def route
           register_slash_commands
-          register_generic_action(:ready)
-          register_generic_action(:message)
-          register_generic_action(:member_join)
-          register_generic_action(:member_leave)
-          register_generic_action(:reaction_add)
-          register_generic_action(:reaction_leave)
+          event_types.each do |event|
+            register_generic_action(event)
+          end
         end
         #-----------------------------------------------------------------------
         private
@@ -44,7 +47,7 @@ module Discord
         #-----------------------------------------------------------------------
         def register_slash_commands
           commands[:slash_command]&.each do |command|
-            Discord.bot.register_application_command(command.get(:name), command.get(:description)) do |cmd|
+            Discord.bot.register_application_command(command.get(:name), command.get(:description), server_id: Discord.test_server_id) do |cmd|
               command.get(:structure).call(cmd) if command.has?(:structure)
             end
 
@@ -57,7 +60,7 @@ module Discord
         #  register generic action
         #-----------------------------------------------------------------------
         def register_generic_action(action)
-          return unless Discord.bot.respond_to?(action)
+          return unless Discordrb::EventContainer.instance_methods(false).include?(action)
 
           Discord.bot.method(action).call do |event|
             Discord::Commands::Registry.commands[action]&.each do |command|

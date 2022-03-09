@@ -10,19 +10,19 @@ module Core
       #-------------------------------------------------------------------------
       #  log message to console and file
       #-------------------------------------------------------------------------
-      def log(msg, level = :info)
+      def log(msg, level = :info, to_db = false)
         log_msg = "#{timestamp} [#{level.to_s.upcase}] #{msg}\n"
 
         #  log to console
         print log_msg
         #  log to database
         begin
-          if database?
+          if database? && to_db
             Database::Logs::Logs.create(
               level: level.to_s.upcase,
               message: msg,
               timestamp: Time.now.strftime('%H:%M:%S %d %B %Y'),
-              instance: Env.fetch('DEPLOYEMENT'),
+              instance: Env.fetch('RELEASE').to_s.upcase,
               ip: nil
             )
           end
@@ -51,6 +51,6 @@ end
 #-------------------------------------------------------------------------------
 #  Kernel function for logging
 #-------------------------------------------------------------------------------
-def log(msg, level = :info)
-  Core::Logger.log(msg, level)
+def log(msg, level = :info, to_db = false)
+  Core::Logger.log(msg, level, to_db)
 end

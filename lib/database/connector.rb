@@ -51,7 +51,8 @@ module Database
 
         client[database]&.query(sql)
       rescue
-        Env.error('Failed to query MySQL database!')
+        log 'Failed to query MySQL database!', :error
+        Env.error("Failing SQL: #{sql}")
       end
       #-------------------------------------------------------------------------
     end
