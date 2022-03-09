@@ -40,7 +40,12 @@ module Discord
         #  register command in main registry
         #-----------------------------------------------------------------------
         def register
-          Discord::Commands::Registry.register(self, get(:event) || :message)
+          event = get(:event) || :message
+
+          Discord::Commands::Registry.register(self, event)
+          return if Discord::Commands::Registry.event_types.include?(event)
+
+          Discord::Commands::Registry.event_types << event
         end
         #-----------------------------------------------------------------------
         #  get attribute value
@@ -58,6 +63,8 @@ module Discord
       #-------------------------------------------------------------------------
       #  command class constructor
       #-------------------------------------------------------------------------
+      include Discord::Commands::Policy
+
       attr_reader :bot, :event, :server, :channel, :message, :recipient, :options
 
       def initialize(event)
@@ -134,21 +141,6 @@ module Discord
       #-------------------------------------------------------------------------
       def channel_id(name)
         channels_info.select { |chan| chan.name == name }.first&.channelid
-      end
-      #-------------------------------------------------------------------------
-      #  check if running user is admin
-      #-------------------------------------------------------------------------
-      def admin_role?
-        admin_role = Database::DiscordBot::Sysroles.find_by(role: 'admin', serverid: server.id)
-
-        return false unless admin_role
-
-        unless recipient.roles.map(&:id).map(&:to_s).include?(admin_role.roleid)
-          event.respond('You are not authorized to run this command.')
-          return false
-        end
-
-        true
       end
       #-------------------------------------------------------------------------
     end

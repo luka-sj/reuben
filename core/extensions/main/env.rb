@@ -5,9 +5,19 @@ module Env
   class << self
     #---------------------------------------------------------------------------
     #  fetch environment variables
-    #--------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def fetch(key)
       ENV[key]
+    end
+
+    def true?(key)
+      ENV[key]&.downcase == 'true'
+    end
+    #---------------------------------------------------------------------------
+    #  fetch website url from config
+    #---------------------------------------------------------------------------
+    def website
+      ENV['APP_URL_SSL']
     end
     #---------------------------------------------------------------------------
     #  run code blocks at steps of initialization
@@ -37,9 +47,9 @@ module Env
     #  log error output
     #---------------------------------------------------------------------------
     def error(msg)
-      log msg, :error
-      log $ERROR_INFO.message, :error
-      log $ERROR_INFO.backtrace.join("\r\n"), :error
+      log msg, :error, true
+      log $ERROR_INFO.message, :error, false
+      log $ERROR_INFO.backtrace.join("\r\n"), :error, false
 
       nil
     end

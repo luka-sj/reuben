@@ -31,7 +31,7 @@ module Core
       #  install all required gems
       #-------------------------------------------------------------------------
       def install
-        return if Env.fetch('SKIP_GEM_INSTALL')&.downcase == 'true'
+        return if Env.true?('SKIP_GEM_INSTALL')
 
         # initial output
         log 'Checking `Gemfile` for dependencies ...'

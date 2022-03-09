@@ -17,6 +17,8 @@ class RemoveGiveawayCommand < Discord::Commands::BaseCommand
   def action
     user_id = "discord#{recipient.id}##{recipient.discriminator}"
     Database::Main::GiveawayEntries.where(claimed: 0, entry: user_id).all.each(&:delete)
+  rescue
+    Env.error('Failed to remove giveaway!')
   end
   #-----------------------------------------------------------------------------
 end

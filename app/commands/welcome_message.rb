@@ -40,6 +40,8 @@ class WelcomeMessageCommand < Discord::Commands::BaseCommand
       active: 1,
       discord: recipient.discriminator
     )
+  rescue
+    Env.error('Unable to register user!')
   end
   #-----------------------------------------------------------------------------
 end
