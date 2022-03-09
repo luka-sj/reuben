@@ -27,8 +27,7 @@ The `Database` interface creates new namespaces and models for all tables in you
 1. Fork this repo
 2. Create a `.env` file in the root and add the following:
 
-```APP_URL=
-   APP_URL_SSL=
+```
    MYSQL_HOST=
    MYSQL_USERNAME=
    MYSQL_PASSWORD=
