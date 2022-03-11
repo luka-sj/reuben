@@ -84,9 +84,7 @@ module Discord
       #  run command callback
       #-------------------------------------------------------------------------
       def run
-        return unless trigger? && server_info.active?
-
-        action
+        action if trigger? && (!server_info || server_info&.active?)
       rescue
         Env.error('Failed to run action!')
       end

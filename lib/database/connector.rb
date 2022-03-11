@@ -51,6 +51,13 @@ module Database
       def query(sql, database = :discord)
         return nil unless client.key?(database)
 
+        if sql.chomp.strip.split(';').length > 1
+          sql.chomp.strip.split(';').each do |line|
+            client[database]&.query(line.chomp.strip)
+          end
+          return nil
+        end
+
         client[database]&.query(sql.chomp.strip)
       rescue
         log 'Failed to query MySQL database!', :error
