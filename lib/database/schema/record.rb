@@ -13,7 +13,18 @@ module Database
 
         data.each do |key, value|
           instance_variable_set("@#{key}", value)
-          self.class.attr_reader(key)
+
+          method_name = key.to_s + (schema_module.send(:data_types)[key.to_s] == 'tinyint' ? '?' : '')
+          self.class.define_method(method_name) do
+            case schema_module.send(:data_types)[key.to_s].to_sym
+            when :tinyint
+              instance_eval("@#{key}.to_i == 1", __FILE__, __LINE__)
+            when :int
+              instance_eval("@#{key}.to_i", __FILE__, __LINE__)
+            else
+              instance_eval("@#{key}", __FILE__, __LINE__)
+            end
+          end
         end
 
         build_relations

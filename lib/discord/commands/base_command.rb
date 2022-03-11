@@ -5,6 +5,8 @@ module Discord
   module Commands
     #---------------------------------------------------------------------------
     class BaseCommand
+      include Discord::ServerInfo
+
       class << self
         #-----------------------------------------------------------------------
         #  collection of all attribute metadata
@@ -82,7 +84,7 @@ module Discord
       #  run command callback
       #-------------------------------------------------------------------------
       def run
-        return unless trigger?
+        return unless trigger? && server_info.active?
 
         action
       rescue
@@ -105,42 +107,6 @@ module Discord
       #-------------------------------------------------------------------------
       def option(opt)
         options[opt.to_s]
-      end
-      #-------------------------------------------------------------------------
-      #  get server info from Database
-      #-------------------------------------------------------------------------
-      def server_info
-        @server_info ||= Database::DiscordBot::Servers.find_by(serverid: server.id)
-      end
-      #-------------------------------------------------------------------------
-      #  get channel info from database
-      #-------------------------------------------------------------------------
-      def channel_info
-        @channel_info ||= Database::DiscordBot::Channels.find_by(serverid: server.id, channelid: channel.id)
-      end
-      #-------------------------------------------------------------------------
-      #  get all channels from database
-      #-------------------------------------------------------------------------
-      def channels_info
-        @channels_info ||= Database::DiscordBot::Channels.where(serverid: server.id).all
-      end
-      #-------------------------------------------------------------------------
-      #  check if channel exists
-      #-------------------------------------------------------------------------
-      def channel?(name)
-        channels_info.map(&:name).include?(name)
-      end
-      #-------------------------------------------------------------------------
-      #  get channel info from name
-      #-------------------------------------------------------------------------
-      def get_channel(name)
-        channels_info.select { |chan| chan.name == name }.first
-      end
-      #-------------------------------------------------------------------------
-      #  get channel id from name
-      #-------------------------------------------------------------------------
-      def channel_id(name)
-        channels_info.select { |chan| chan.name == name }.first&.channelid
       end
       #-------------------------------------------------------------------------
     end

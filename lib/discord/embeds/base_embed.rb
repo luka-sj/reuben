@@ -3,6 +3,7 @@
 #===============================================================================
 module Discord
   class BaseEmbed
+    include Discord::ServerInfo
     #---------------------------------------------------------------------------
     #  default embed constructor
     #---------------------------------------------------------------------------
@@ -24,7 +25,7 @@ module Discord
     #  send embed to event channel
     #---------------------------------------------------------------------------
     def send
-      event.send_embed('', output)
+      event.send_embed('', output) if server_info.active?
     end
     #---------------------------------------------------------------------------
     #  render as embed object
@@ -80,24 +81,6 @@ module Discord
           'icon_url' => 'https://i.imgur.com/jxGPkTR.png'
         }
       end
-    end
-    #---------------------------------------------------------------------------
-    #  get server info from Database
-    #---------------------------------------------------------------------------
-    def server_info
-      @server_info ||= Database::DiscordBot::Servers.find_by(serverid: server.id)
-    end
-    #---------------------------------------------------------------------------
-    #  get channel info from database
-    #---------------------------------------------------------------------------
-    def channel_info
-      @channel_info ||= Database::DiscordBot::Channels.find_by(serverid: server.id, channelid: channel.id)
-    end
-    #---------------------------------------------------------------------------
-    #  get all channels from database
-    #---------------------------------------------------------------------------
-    def channels_info
-      @channels_info ||= Database::DiscordBot::Channels.where(serverid: server.id).all
     end
     #---------------------------------------------------------------------------
   end

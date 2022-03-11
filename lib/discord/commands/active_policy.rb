@@ -31,11 +31,11 @@ module Discord
       #  find role for authorization
       #-------------------------------------------------------------------------
       def authorize_role(role)
-        server_role = Database::DiscordBot::Sysroles.find_by(role: role.to_s, serverid: server.id)
+        server_role = Database::Discord::Sysroles.find_by(role: role.to_s, server_id: server.id)
 
         return unauthorized access unless server_role
 
-        return unauthorized_access unless recipient.roles.map(&:id).map(&:to_s).include?(server_role.roleid)
+        return unauthorized_access unless recipient.roles.map(&:id).map(&:to_s).include?(server_role.role_id)
 
         true
       end

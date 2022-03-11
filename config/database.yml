@@ -3,9 +3,9 @@ default: &default
   username: <%= Env.fetch('MYSQL_USERNAME') %>
   password: <%= Env.fetch('MYSQL_PASSWORD') %>
 
-discord_bot:
+discord:
   <<: *default
-  database: discord_bot
+  database: discord
 
 main:
   <<: *default

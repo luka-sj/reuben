@@ -17,7 +17,7 @@ module Database
       #-------------------------------------------------------------------------
       #  connect to MySQL instance
       #-------------------------------------------------------------------------
-      def connect
+      def connect(target = nil)
         @client = {}
         #  load configuration file
         log 'Starting MySQL database connection:'
@@ -25,6 +25,8 @@ module Database
         #  iterate through configuration file and create DB connections
         config.each do |db, conf|
           next if db.downcase.eql?('default')
+
+          next if target && !target.to_s.downcase.eql?(db.downcase)
 
           #  store loaded database names
           databases << db
@@ -46,10 +48,10 @@ module Database
       #-------------------------------------------------------------------------
       #  query database content
       #-------------------------------------------------------------------------
-      def query(sql, database = :discord_bot)
+      def query(sql, database = :discord)
         return nil unless client.key?(database)
 
-        client[database]&.query(sql)
+        client[database]&.query(sql.chomp.strip)
       rescue
         log 'Failed to query MySQL database!', :error
         Env.error("Failing SQL: #{sql}")

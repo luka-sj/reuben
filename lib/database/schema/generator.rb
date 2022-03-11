@@ -17,6 +17,7 @@ module Database
             #  query information schema
             sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = '#{db}'"
             rel = "SELECT * FROM information_schema.key_column_usage WHERE constraint_schema = '#{db}' AND referenced_column_name IS NOT NULL"
+            inf = "SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = '#{db}'"
 
             # iterate through results
             Database::Connector.query(sql)&.each do |row|
@@ -45,6 +46,14 @@ module Database
                     reference_column: row_rel['referenced_column_name'],
                     column_name: row_rel['column_name']
                   }
+                end
+              end
+
+              #  get column data info
+              data_types = {}.tap do |hash|
+                Database::Connector.query(inf + " AND table_name = '#{table}'")&.each do |row_rel|
+                  row_rel = row_rel.transform_keys(&:downcase)
+                  hash[row_rel['column_name']] = row_rel['data_type']
                 end
               end
 
