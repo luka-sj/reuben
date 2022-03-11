@@ -7,11 +7,11 @@ module Env
     #  fetch environment variables
     #---------------------------------------------------------------------------
     def fetch(key)
-      ENV[key]
+      ENV[key.to_s.upcase]
     end
 
     def true?(key)
-      ENV[key]&.downcase == 'true'
+      ENV[key.to_s.upcase]&.downcase == 'true'
     end
     #---------------------------------------------------------------------------
     #  fetch website url from config

@@ -31,7 +31,7 @@ module Core
       #  install all required gems
       #-------------------------------------------------------------------------
       def install
-        return if Env.true?('SKIP_GEM_INSTALL')
+        return if Env.true?('SKIP_GEM_INSTALL') && !Env.flag?(:install_gems)
 
         # initial output
         log 'Checking `Gemfile` for dependencies ...'

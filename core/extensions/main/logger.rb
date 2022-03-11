@@ -27,7 +27,7 @@ module Core
             )
           end
         rescue
-          print 'Could not log to database!'
+          print
         end
         #  log to file
         File.open("./logs/#{level}.txt", 'a') { |file| file.write(log_msg) }
