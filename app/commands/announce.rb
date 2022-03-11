@@ -33,7 +33,7 @@ class AnnounceCommand < Discord::Commands::BaseCommand
   #  get channel for broadcasting
   #-----------------------------------------------------------------------------
   def broadcast_channel
-    option(:channel) ? option(:channel) : channel_id('BULLETIN')
+    option(:channel) || channel_id('BULLETIN')
   end
   #-----------------------------------------------------------------------------
   #  return embed if applicable
