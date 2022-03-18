@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS `discord`;
-CREATE DATABASE `discord`;
+DROP SCHEMA IF EXISTS `discord`;
+CREATE SCHEMA `discord`;
 
 CREATE TABLE `discord`.`servers` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,

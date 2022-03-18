@@ -28,7 +28,7 @@ module Database
       #-------------------------------------------------------------------------
       def select_sql(rows = [])
         Array(rows).each do |row|
-          select << row
+          select << "`#{table_name}`.`#{row}`"
         end
         select.compact!
         select.uniq!
@@ -43,9 +43,9 @@ module Database
             key = "Database::#{db_name.camel_case}::#{key.to_s.camel_case}".constantize.send(:table_name)
             where << where_sql(value, key)
           elsif value.is_a?(Array)
-            where << "#{table}.#{key} IN (#{value.map { |row| "'#{row}'" }.join(', ')})"
+            where << "`#{table}`.`#{key}` IN (#{value.map { |row| "'#{row}'" }.join(', ')})"
           else
-            where << "#{table}.#{key} = '#{value}'"
+            where << "`#{table}`.`#{key}` = '#{value}'"
           end
         end
         where.compact!
@@ -67,11 +67,11 @@ module Database
       def group_sql(options = {}, table = table_name)
         Array(options).each do |key, value|
           if value.is_a?(Array)
-            value.each { |row| group << "#{table}.#{row}" }
+            value.each { |row| group << "`#{table}`.`#{row}`" }
           elsif value.is_a?(Hash)
             group << group_sql(value, key)
           else
-            group << "#{table}.#{key}"
+            group << "`#{table}`.`#{key}`"
           end
         end
         group.compact!
@@ -85,7 +85,7 @@ module Database
           if value.is_a?(Hash)
             order << order_sql(value, key)
           else
-            order << "#{table}.#{key} #{value.upcase}"
+            order << "`#{table}`.`#{key}` #{value.upcase}"
           end
         end
         order.compact!
