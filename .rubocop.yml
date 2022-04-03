@@ -275,6 +275,7 @@ Bundler/GemFilename:
 
 AllCops:
   Exclude:
+    - 'gems/**/*'
     - 'spec/**/*'
     - 'config/**/*.rb'
     - 'lib/tasks/**/*'

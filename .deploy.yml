@@ -1,0 +1,23 @@
+name: Deploy Reuben code to production
+
+local:
+  jobs:
+    tests:
+      name: Run tests
+      commands:
+        - rubocop <%= ENV['GIT_WORKING_DIR'] %>
+
+    push:
+      name: Push changes
+      commands:
+        - git checkout <%= ENV['GIT_BRANCH'] %>
+        - git push -u origin <%= ENV['GIT_BRANCH'] %>
+
+remote:
+  jobs:
+    pull:
+      name: Pull changes
+      commands:
+        - cd /node/reuben
+        - git checkout <%= ENV['GIT_BRANCH'] %>
+        - git pull
