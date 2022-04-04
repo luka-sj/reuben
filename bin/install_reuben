@@ -37,9 +37,6 @@ unless File.exist?("#{Dir.pwd}/.env")
   end
 end
 
-# load DB schema
-system('bin/reuben --load-schema --no-logging')
-
 # deploy service file to file system if able
 begin
   service = File.read("#{Dir.pwd}/reuben.service")

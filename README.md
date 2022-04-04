@@ -36,7 +36,8 @@ The `Database` interface creates new namespaces and models for all tables in you
    BOT_OWNER=
    BOT_TOKEN=
 ```
-4. Start the application using `bin/reuben`
+4. Load database schema by running `bin/reuben --load-schema --no-logging`
+5. Start the application using `bin/reuben`
 
 \
 Running the bot is best handled on a server. Deployment using **Docker** or **systemctl** will follow as the bot is further developed.
