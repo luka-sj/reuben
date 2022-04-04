@@ -11,6 +11,8 @@ module Core
       #  log message to console and file
       #-------------------------------------------------------------------------
       def log(msg, level = :info, to_db = false)
+        return puts(msg) if Env.flag?(:no_logging)
+
         log_msg = "#{timestamp} [#{level.to_s.upcase}] #{msg}\n"
 
         #  log to console

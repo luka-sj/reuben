@@ -19,22 +19,24 @@ A Ruby framework for creating the **Reuben** bot using `discordrb`.
 Additional gem configuration can be found in `config/gems.rb`
 
 ---
-**Reuben** comes with a Rails-like system for interfacing with a local or remote database system. This interface, however, is limited to **MySQL** databases only out of the box.
+**Reuben** comes with a Rails-like system for interfacing with a local or remote database system. This interface, however, is limited to **MySQL** databases out of the box.
 
 The `Database` interface creates new namespaces and models for all tables in your database and their relationships (more documentation hopefully to follow soon).
 
 ## Usage
 1. Fork this repo
-2. Create a `.env` file in the root and add the following:
+2. Run the script `bin/install_reuben` to complete installation
+3. Populate the `.env` file in the root with the following:
 
 ```
+   RELEASE=
    MYSQL_HOST=
    MYSQL_USERNAME=
    MYSQL_PASSWORD=
+   BOT_OWNER=
    BOT_TOKEN=
-   RELEASE=
 ```
-3. Start the application using `bin/reuben`
+4. Start the application using `bin/reuben`
 
 \
 Running the bot is best handled on a server. Deployment using **Docker** or **systemctl** will follow as the bot is further developed.

@@ -1,4 +1,5 @@
 name: Deploy Reuben code to production
+version: 1.0
 
 local:
   jobs:
@@ -11,7 +12,7 @@ local:
       name: Push changes
       commands:
         - git checkout <%= ENV['GIT_BRANCH'] %>
-        - git push -u origin <%= ENV['GIT_BRANCH'] %>
+        - git push
 
 remote:
   jobs:

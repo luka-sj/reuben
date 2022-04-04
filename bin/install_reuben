@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+# checkout to master branch and pull latest
+system('git checkout master')
+system('git pull')
+
+# create ignored directories
+[
+  'logs',
+  'tmp'
+].each do |dir|
+  next if Dir.exist?("#{Dir.pwd}/#{dir}")
+
+  puts "Creating '#{Dir.pwd}/#{dir}' directory ..."
+  Dir.mkdir("#{Dir.pwd}/#{dir}")
+end
+
+# install required gems
+system('bin/install_gems --no-logging')
+
+# create and pre-populate .env config
+unless File.exist?("#{Dir.pwd}/.env")
+  puts 'Setting up `.env` configuration file'
+  File.open("#{Dir.pwd}/.env", 'w') do |file|
+    file.write(
+      [
+        'RELEASE=dev',
+        'MYSQL_HOST=127.0.0.1',
+        'MYSQL_USERNAME=bot',
+        'MYSQL_PASSWORD={password}',
+        'BOT_OWNER={user_id}',
+        'BOT_TOKEN={token_id}',
+        'TEST_SERVER={server_id}',
+        'TEST_MODE=true',
+        'SKIP_GEM_INSTALL=true'
+      ].join('\n')
+    )
+  end
+end
+
+# load DB schema
+system('bin/reuben --load-schema --no-logging')
+
+# deploy service file to file system if able
+begin
+  service = File.read("#{Dir.pwd}/reuben.service")
+  puts 'Configuring reuben systemd service ...'
+  File.open("#{Dir.pwd}/reuben.service", 'w') do |file|
+    file.write(service.gsub('{WORKING_DIRECTORY}', Dir.pwd))
+  end
+  puts "Writing reuben service to '/etc/systemd/system/reuben.service'"
+  FileUtils.cp("#{Dir.pwd}/reuben.service", '/etc/systemd/system/reuben.service')
+rescue
+  puts 'Unable to deploy reuben service.'
+end

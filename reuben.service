@@ -5,7 +5,7 @@ Documentation=https://github.com/luka-sj/reuben
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/usr/src/blinkit
+WorkingDirectory={WORKING_DIRECTORY}
 ExecStart=/usr/bin/ruby ./bin/reuben
 Restart=on-failure
 RestartSec=15s
