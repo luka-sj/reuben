@@ -1,5 +1,5 @@
 name: Deploy Reuben code to production
-version: 1.0
+version: 1.0.1
 
 local:
   jobs:
@@ -16,9 +16,29 @@ local:
 
 remote:
   jobs:
+    stop_bot:
+      name: Stop bot
+      can_fail: true
+      commands:
+        - systemctl stop reuben
+
+    install_bot:
+      name: Install bot
+      if: cd <%= ENV['REMOTE_ROOT_DIR'] %> && test -f .env && echo false
+      commands:
+        - cd <%= ENV['REMOTE_ROOT_DIR'] %>
+        - bin/install_reuben
+        - bin/reuben --load-schema --no-logging
+
     pull:
       name: Pull changes
       commands:
-        - cd /node/reuben
+        - cd <%= ENV['REMOTE_ROOT_DIR'] %>
         - git checkout <%= ENV['GIT_BRANCH'] %>
         - git pull
+
+    start_bot:
+      name: Start bot
+      can_fail: true
+      commands:
+        - systemctl start reuben

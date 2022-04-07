@@ -18,21 +18,28 @@ end
 system('bin/install_gems --no-logging')
 
 # create and pre-populate .env config
+to_create = [
+  'RELEASE',
+  'MYSQL_HOST',
+  'MYSQL_USERNAME',
+  'MYSQL_PASSWORD',
+  'BOT_OWNER',
+  'BOT_TOKEN',
+  'TEST_SERVER',
+  'TEST_MODE',
+  'SKIP_GEM_INSTALL'
+]
+
 unless File.exist?("#{Dir.pwd}/.env")
-  puts 'Setting up `.env` configuration file'
+  puts 'Setting up `.env` configuration file:'
   File.open("#{Dir.pwd}/.env", 'w') do |file|
     file.write(
-      [
-        'RELEASE=dev',
-        'MYSQL_HOST=127.0.0.1',
-        'MYSQL_USERNAME=bot',
-        'MYSQL_PASSWORD={password}',
-        'BOT_OWNER={user_id}',
-        'BOT_TOKEN={token_id}',
-        'TEST_SERVER={server_id}',
-        'TEST_MODE=true',
-        'SKIP_GEM_INSTALL=true'
-      ].join('\n')
+      [].tap do |to_write|
+        to_create.each do |section|
+          puts "\nSpecify a value for `#{section}`: "
+          to_write << "#{section}=#{gets.chomp}"
+        end
+      end.join("\n")
     )
   end
 end
@@ -40,7 +47,7 @@ end
 # deploy service file to file system if able
 begin
   service = File.read("#{Dir.pwd}/reuben.service")
-  puts 'Configuring reuben systemd service ...'
+  puts '\nConfiguring reuben systemd service ...'
   File.open("#{Dir.pwd}/reuben.service", 'w') do |file|
     file.write(service.gsub('{WORKING_DIRECTORY}', Dir.pwd))
   end
