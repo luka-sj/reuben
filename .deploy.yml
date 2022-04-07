@@ -15,6 +15,11 @@ local:
         - git push
 
 remote:
+  before_job:
+    description: Run command(s) before each remote job
+    commands:
+      - cd <%= ENV['REMOTE_ROOT_DIR'] %>
+
   jobs:
     stop_bot:
       name: Stop bot
@@ -22,20 +27,27 @@ remote:
       commands:
         - systemctl stop reuben
 
-    install_bot:
-      name: Install bot
-      if: cd <%= ENV['REMOTE_ROOT_DIR'] %> && test -f .env && echo false
-      commands:
-        - cd <%= ENV['REMOTE_ROOT_DIR'] %>
-        - bin/install_reuben
-        - bin/reuben --load-schema --no-logging
-
     pull:
       name: Pull changes
       commands:
-        - cd <%= ENV['REMOTE_ROOT_DIR'] %>
         - git checkout <%= ENV['GIT_BRANCH'] %>
         - git pull
+        - chmod 755 bin/build_image
+        - chmod 755 bin/install_reuben
+        - chmod 755 bin/install_gems
+        - chmod 755 bin/reuben
+
+    install_gems:
+      name: Install gems
+      commands:
+        - bin/install_gems
+
+    install_bot:
+      name: Install bot
+      if: test -f .env && echo false
+      commands:
+        - bin/install_reuben
+        - bin/reuben --load-schema --no-logging
 
     start_bot:
       name: Start bot
