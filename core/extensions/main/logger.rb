@@ -22,7 +22,7 @@ module Core
           if database? && to_db
             Database::Logs::Logs.create(
               level: level.to_s.upcase,
-              message: msg,
+              message: db_parse_msg(msg),
               timestamp: Time.now.strftime('%H:%M:%S %d %B %Y'),
               instance: Env.fetch('RELEASE').to_s.upcase,
               ip: nil
@@ -45,6 +45,12 @@ module Core
       #-------------------------------------------------------------------------
       def database?
         Database && Database.const_defined?(:Logs) && Database::Logs.const_defined?(:Logs)
+      end
+      #-------------------------------------------------------------------------
+      #  parse message for database use
+      #-------------------------------------------------------------------------
+      def db_parse_msg(msg)
+        msg.gsub("'", "\'")
       end
       #-------------------------------------------------------------------------
     end
