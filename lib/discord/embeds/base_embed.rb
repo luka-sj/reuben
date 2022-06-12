@@ -10,10 +10,14 @@ module Discord
     def initialize(event)
       @bot       = event.bot
       @event     = event
-      @server    = event.server
-      @channel   = event.channel
-      @message   = event.message
-      @recipient = event.message.author
+      @server    = event.respond_to?(:server) ? event.server : nil
+      @channel   = event.respond_to?(:channel) ? event.channel : nil
+      @message   = event.respond_to?(:message) ? event.message : nil
+      if event.respond_to?(:user)
+        @recipient = event.user
+      else
+        @recipient = @message.respond_to?(:author) ? @message.author : nil
+      end
     end
     #---------------------------------------------------------------------------
     #  default embed data
