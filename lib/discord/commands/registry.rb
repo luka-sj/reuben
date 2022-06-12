@@ -35,6 +35,7 @@ module Discord
         #  send registry request to discord API
         #-----------------------------------------------------------------------
         def route
+          clear_existing_registry
           register_slash_commands
           event_types.each do |event|
             register_generic_action(event)
@@ -47,8 +48,12 @@ module Discord
         #-----------------------------------------------------------------------
         def register_slash_commands
           commands[:slash_command]&.each do |command|
-            Discord.bot.register_application_command(command.get(:name), command.get(:description), server_id: Discord.test_server_id) do |cmd|
-              command.get(:structure).call(cmd) if command.has?(:structure)
+            command_servers(command.get(:name)).each do |server_id|
+              reg = Discord.bot.register_application_command(command.get(:name), command.get(:description), server_id: server_id) do |cmd|
+                command.get(:structure).call(cmd) if command.has?(:structure)
+              end
+
+              Database::Discord::RegisteredCommands.create(server_id: reg.server_id, command_id: reg.id)
             end
 
             Discord.bot.application_command(command.get(:name)) do |event|
@@ -71,6 +76,21 @@ module Discord
           end
         rescue
           Env.error("Failed to bind bot action: #{action}!")
+        end
+        #-----------------------------------------------------------------------
+        #  get list of available servers associated with command
+        #-----------------------------------------------------------------------
+        def command_servers(cmd)
+          Database::Discord::EnabledCommands.where(command_id: cmd.to_s).all.map(&:server_id) + [Discord.test_server_id].compact
+        end
+        #-----------------------------------------------------------------------
+        #  clear previously registered commands
+        #-----------------------------------------------------------------------
+        def clear_existing_registry
+          Database::Discord::RegisteredCommands.all.each do |command|
+            Discord.bot.delete_application_command(command.command_id, server_id: command.server_id)
+            command.delete
+          end
         end
         #-----------------------------------------------------------------------
       end

@@ -11,8 +11,9 @@ class AnnounceCommand < Discord::Commands::BaseCommand
   description 'Announce message from bot.'
 
   structure do |cmd|
-    cmd.string('message', 'Message to broadcast to server')
-    cmd.string('channel', 'Channel to broadcast to')
+    cmd.string('message', 'Message to broadcast to server.')
+    cmd.string('channel', 'Channel to broadcast to.')
+    cmd.string('embed', 'Specify a system embed to attach.')
   end
 
   register
@@ -33,7 +34,13 @@ class AnnounceCommand < Discord::Commands::BaseCommand
   #  get channel for broadcasting
   #-----------------------------------------------------------------------------
   def broadcast_channel
-    option(:channel) || channel_id('BULLETIN')
+    get_broadcast_channel || channel_id('BULLETIN')
+  end
+
+  def get_broadcast_channel
+    return nil unless option(:channel)
+
+    option(:channel).numeric? ? option(:channel) : channel_id(option(:channel).to_s.upcase)
   end
   #-----------------------------------------------------------------------------
   #  return embed if applicable

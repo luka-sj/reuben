@@ -31,9 +31,9 @@ module Discord
       #  find role for authorization
       #-------------------------------------------------------------------------
       def authorize_role(role)
-        server_role = Database::Discord::Sysroles.find_by(role: role.to_s, server_id: server.id)
+        server_role = Database::Discord::AdminRoles.find_by(name: role.to_s, server_id: server.id)
 
-        return unauthorized access unless server_role
+        return unauthorized_access unless server_role
 
         return unauthorized_access unless recipient.roles.map(&:id).map(&:to_s).include?(server_role.role_id)
 
@@ -46,6 +46,19 @@ module Discord
         event.respond(content: 'You are not authorized to run this command.', ephemeral: true)
 
         false
+      end
+      #-------------------------------------------------------------------------
+      #  check if command is enabled in server context
+      #-------------------------------------------------------------------------
+      def command_enabled?
+        return true unless server
+
+        unless Database::Discord::EnabledCommands.find_by(server_id: server.id, command_id: self.class.get(:name))
+          event.respond(content: 'Command not enabled in current server.', ephemeral: true)
+          return false
+        end
+
+        true
       end
       #-------------------------------------------------------------------------
     end
